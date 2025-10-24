@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CustomerSidebar } from "@/components/CustomerSidebar";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { ExternalLink, Calendar, Clock } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 
 const CustomerHistory = () => {
@@ -62,117 +63,139 @@ const CustomerHistory = () => {
           </header>
 
           <main className="flex-1 p-8 overflow-auto bg-gradient-to-br from-primary/5 via-background to-accent/5">
-            <div className="mb-6">
+            <div className="mb-6 animate-fade-in">
               <h2 className="text-2xl font-bold mb-2">All Requests</h2>
               <p className="text-muted-foreground">Complete history of your card rental requests</p>
             </div>
 
             {requests.length === 0 ? (
-              <Card>
+              <Card className="hover-lift">
                 <CardContent className="py-8 text-center text-muted-foreground">
                   No requests found
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid gap-4">
-                {requests.map((req, index) => (
-                  <Card key={req.id}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                            #{index + 1}
-                          </div>
-                          <div>
-                            <CardTitle>{req.product_name}</CardTitle>
-                            <CardDescription>Card: {req.credit_cards?.card_name}</CardDescription>
-                          </div>
-                        </div>
-                        <Badge 
-                          variant={
-                            req.status === "approved" ? "default" : 
-                            req.status === "rejected" ? "destructive" : 
-                            "secondary"
-                          }
-                        >
-                          {req.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex flex-wrap gap-4 text-sm">
-                          <div className="flex items-center gap-1.5 text-muted-foreground">
-                            <Calendar className="h-4 w-4" />
-                            <span>{formatDate(req.created_at)}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-muted-foreground">
-                            <Clock className="h-4 w-4" />
-                            <span>{formatTime(req.created_at)}</span>
-                          </div>
-                        </div>
-
-                        <p><span className="font-medium">Price:</span> ₹{req.product_price.toLocaleString('en-IN')}</p>
-                        
-                        {req.product_url && (
-                          <p className="flex items-center gap-1">
-                            <span className="font-medium">URL:</span> 
-                            <a href={req.product_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1">
-                              View Product <ExternalLink className="h-3 w-3" />
-                            </a>
-                          </p>
-                        )}
-                        
-                        {req.message && (
-                          <div>
-                            <p className="font-medium mb-1">Your Message:</p>
-                            <p className="text-sm text-muted-foreground italic bg-muted/50 p-2 rounded">{req.message}</p>
-                          </div>
-                        )}
-
-                        {req.status === "approved" && (
-                          <div className="pt-2 border-t">
-                            <p className="text-sm font-medium text-green-600 mb-2">✓ Request Approved</p>
-                            {req.approved_at && (
-                              <p className="text-sm text-muted-foreground mb-2">
-                                Approved on {formatDate(req.approved_at)} at {formatTime(req.approved_at)}
-                              </p>
-                            )}
-                            {req.order_details && (
-                              <div className="mb-2">
-                                <p className="text-sm font-medium">Order Details:</p>
-                                <p className="text-sm text-muted-foreground">{req.order_details}</p>
+              <Card className="hover-lift animate-fade-in">
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-12">#</TableHead>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Card</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Message</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {requests.map((req, index) => (
+                          <TableRow key={req.id} className="table-row-hover">
+                            <TableCell className="font-medium">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-sm hover-scale">
+                                {index + 1}
                               </div>
-                            )}
-                            {req.order_receipt_url && (
-                              <a 
-                                href={req.order_receipt_url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline text-sm inline-flex items-center gap-1"
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-1">
+                                <span className="font-medium">{req.product_name}</span>
+                                {req.product_url && (
+                                  <a 
+                                    href={req.product_url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-xs text-primary hover:underline flex items-center gap-1 hover-scale"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    View Product <ExternalLink className="h-3 w-3" />
+                                  </a>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm text-muted-foreground">
+                                {req.credit_cards?.card_name}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <span className="font-medium">₹{req.product_price.toLocaleString('en-IN')}</span>
+                            </TableCell>
+                            <TableCell>
+                              <Badge 
+                                className="hover-scale"
+                                variant={
+                                  req.status === "approved" ? "default" : 
+                                  req.status === "rejected" ? "destructive" : 
+                                  "secondary"
+                                }
                               >
-                                View Receipt <ExternalLink className="h-3 w-3" />
-                              </a>
-                            )}
-                          </div>
-                        )}
-
-                        {req.status === "rejected" && req.rejection_reason && (
-                          <div className="pt-2 border-t">
-                            <p className="text-sm font-medium text-destructive mb-1">Rejection Reason:</p>
-                            {req.rejected_at && (
-                              <p className="text-sm text-muted-foreground mb-2">
-                                Rejected on {formatDate(req.rejected_at)} at {formatTime(req.rejected_at)}
-                              </p>
-                            )}
-                            <p className="text-sm text-muted-foreground bg-destructive/10 p-2 rounded">{req.rejection_reason}</p>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                                {req.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-0.5 text-sm">
+                                <span>{formatDate(req.created_at)}</span>
+                                <span className="text-xs text-muted-foreground">{formatTime(req.created_at)}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="max-w-xs">
+                              {req.message && (
+                                <p className="text-sm text-muted-foreground truncate italic" title={req.message}>
+                                  {req.message}
+                                </p>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex flex-col gap-1 items-end">
+                                {req.status === "approved" && (
+                                  <>
+                                    {req.approved_at && (
+                                      <span className="text-xs text-green-600">
+                                        ✓ {formatDate(req.approved_at)}
+                                      </span>
+                                    )}
+                                    {req.order_receipt_url && (
+                                      <a 
+                                        href={req.order_receipt_url} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-xs text-primary hover:underline flex items-center gap-1 hover-scale"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        Receipt <ExternalLink className="h-3 w-3" />
+                                      </a>
+                                    )}
+                                    {req.order_details && (
+                                      <span className="text-xs text-muted-foreground" title={req.order_details}>
+                                        Order Details
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                                {req.status === "rejected" && req.rejection_reason && (
+                                  <>
+                                    {req.rejected_at && (
+                                      <span className="text-xs text-destructive">
+                                        ✗ {formatDate(req.rejected_at)}
+                                      </span>
+                                    )}
+                                    <span className="text-xs text-muted-foreground" title={req.rejection_reason}>
+                                      Reason
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </main>
         </div>
