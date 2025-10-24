@@ -29,9 +29,9 @@ const CustomerHistory = () => {
     const { data: { user } } = await supabase.auth.getUser();
     const { data } = await supabase
       .from("purchase_requests")
-      .select("*, credit_cards(card_name)")
+      .select("*")
       .eq("customer_id", user?.id)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
     setRequests(data || []);
   };
 
@@ -117,7 +117,7 @@ const CustomerHistory = () => {
                             </TableCell>
                             <TableCell>
                               <span className="text-sm text-muted-foreground">
-                                {req.credit_cards?.card_name}
+                                {req.card_name_snapshot || 'N/A'}
                               </span>
                             </TableCell>
                             <TableCell>
@@ -142,11 +142,24 @@ const CustomerHistory = () => {
                               </div>
                             </TableCell>
                             <TableCell className="max-w-xs">
-                              {req.message && (
-                                <p className="text-sm text-muted-foreground truncate italic" title={req.message}>
-                                  {req.message}
-                                </p>
-                              )}
+                              <div className="space-y-1">
+                                {req.message && (
+                                  <p className="text-sm text-muted-foreground truncate italic" title={req.message}>
+                                    {req.message}
+                                  </p>
+                                )}
+                                {req.payment_proof_url && (
+                                  <a 
+                                    href={req.payment_proof_url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-xs text-primary hover:underline flex items-center gap-1 hover-scale"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    Payment Proof <ExternalLink className="h-3 w-3" />
+                                  </a>
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex flex-col gap-1 items-end">
@@ -175,16 +188,18 @@ const CustomerHistory = () => {
                                     )}
                                   </>
                                 )}
-                                {req.status === "rejected" && req.rejection_reason && (
+                                {req.status === "rejected" && (
                                   <>
                                     {req.rejected_at && (
                                       <span className="text-xs text-destructive">
                                         ✗ {formatDate(req.rejected_at)}
                                       </span>
                                     )}
-                                    <span className="text-xs text-muted-foreground" title={req.rejection_reason}>
-                                      Reason
-                                    </span>
+                                    {req.rejection_reason && (
+                                      <p className="text-xs text-destructive max-w-xs" title={req.rejection_reason}>
+                                        Reason: {req.rejection_reason}
+                                      </p>
+                                    )}
                                   </>
                                 )}
                               </div>

@@ -57,6 +57,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          phone: string | null
         }
         Insert: {
           address?: string | null
@@ -64,6 +65,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          phone?: string | null
         }
         Update: {
           address?: string | null
@@ -71,6 +73,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
         }
         Relationships: []
       }
@@ -79,8 +82,11 @@ export type Database = {
           approved_at: string | null
           card_holder_id: string
           card_id: string | null
+          card_name_snapshot: string | null
           created_at: string | null
           customer_id: string
+          customer_name: string | null
+          customer_phone: string | null
           id: string
           message: string | null
           order_details: string | null
@@ -97,8 +103,11 @@ export type Database = {
           approved_at?: string | null
           card_holder_id: string
           card_id?: string | null
+          card_name_snapshot?: string | null
           created_at?: string | null
           customer_id: string
+          customer_name?: string | null
+          customer_phone?: string | null
           id?: string
           message?: string | null
           order_details?: string | null
@@ -115,8 +124,11 @@ export type Database = {
           approved_at?: string | null
           card_holder_id?: string
           card_id?: string | null
+          card_name_snapshot?: string | null
           created_at?: string | null
           customer_id?: string
+          customer_name?: string | null
+          customer_phone?: string | null
           id?: string
           message?: string | null
           order_details?: string | null

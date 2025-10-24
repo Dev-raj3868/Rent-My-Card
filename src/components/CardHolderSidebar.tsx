@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { CreditCard, User, Settings, LogOut, Home, History } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,6 +25,23 @@ const menuItems = [
 export function CardHolderSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [cardHolderName, setCardHolderName] = useState<string>("");
+
+  useEffect(() => {
+    fetchCardHolderName();
+  }, []);
+
+  const fetchCardHolderName = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .maybeSingle();
+      setCardHolderName(data?.full_name || "Card Holder");
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -36,9 +54,14 @@ export function CardHolderSidebar() {
     <Sidebar className="border-r">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center gap-2 text-lg font-bold px-4 py-4">
-            <CreditCard className="h-5 w-5" />
-            Card Holder
+          <SidebarGroupLabel className="flex flex-col items-start gap-1 text-lg font-bold px-4 py-4">
+            <div className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5" />
+              Card Holder
+            </div>
+            {cardHolderName && (
+              <span className="text-xs font-normal text-muted-foreground">{cardHolderName}</span>
+            )}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

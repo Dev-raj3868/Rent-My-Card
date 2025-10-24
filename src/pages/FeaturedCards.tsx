@@ -61,10 +61,17 @@ const FeaturedCards = () => {
     const { data: { user } } = await supabase.auth.getUser();
 
     try {
+      // Fetch customer profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, phone")
+        .eq("id", user?.id)
+        .maybeSingle();
+
       // Upload payment proof image
       const fileExt = paymentFile.name.split('.').pop();
       const fileName = `${user?.id}/${Date.now()}.${fileExt}`;
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('order-receipts')
         .upload(fileName, paymentFile);
 
@@ -74,7 +81,7 @@ const FeaturedCards = () => {
         .from('order-receipts')
         .getPublicUrl(fileName);
 
-      // Create purchase request with payment proof
+      // Create purchase request with payment proof and customer info
       const { error } = await supabase.from("purchase_requests").insert({
         customer_id: user?.id as string,
         card_id: selectedCard.id,
@@ -83,7 +90,10 @@ const FeaturedCards = () => {
         product_price: requestFormData.product_price,
         product_url: requestFormData.product_url,
         message: requestFormData.message,
-        payment_proof_url: publicUrl
+        payment_proof_url: publicUrl,
+        customer_name: profile?.full_name || null,
+        customer_phone: profile?.phone || null,
+        card_name_snapshot: selectedCard.card_name
       });
 
       if (error) throw error;

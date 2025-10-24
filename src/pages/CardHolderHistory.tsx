@@ -29,7 +29,7 @@ const CardHolderHistory = () => {
     const { data: { user } } = await supabase.auth.getUser();
     const { data } = await supabase
       .from("purchase_requests")
-      .select("*, credit_cards(card_name)")
+      .select("*")
       .eq("card_holder_id", user?.id)
       .order("created_at", { ascending: false });
     setRequests(data || []);
@@ -84,6 +84,7 @@ const CardHolderHistory = () => {
                           <TableHead className="w-12">#</TableHead>
                           <TableHead>Product</TableHead>
                           <TableHead>Card</TableHead>
+                          <TableHead>Customer</TableHead>
                           <TableHead>Price</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Date</TableHead>
@@ -117,8 +118,16 @@ const CardHolderHistory = () => {
                             </TableCell>
                             <TableCell>
                               <span className="text-sm text-muted-foreground">
-                                {req.credit_cards?.card_name || 'Deleted'}
+                                {req.card_name_snapshot || 'N/A'}
                               </span>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-0.5">
+                                <span className="text-sm font-medium">{req.customer_name || 'N/A'}</span>
+                                {req.customer_phone && (
+                                  <span className="text-xs text-muted-foreground">{req.customer_phone}</span>
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell>
                               <span className="font-medium">₹{req.product_price.toLocaleString('en-IN')}</span>
@@ -186,16 +195,18 @@ const CardHolderHistory = () => {
                                     )}
                                   </>
                                 )}
-                                {req.status === "rejected" && req.rejection_reason && (
+                                {req.status === "rejected" && (
                                   <>
                                     {req.rejected_at && (
                                       <span className="text-xs text-destructive">
                                         ✗ {formatDate(req.rejected_at)}
                                       </span>
                                     )}
-                                    <span className="text-xs text-muted-foreground" title={req.rejection_reason}>
-                                      Reason
-                                    </span>
+                                    {req.rejection_reason && (
+                                      <p className="text-xs text-destructive max-w-xs" title={req.rejection_reason}>
+                                        Reason: {req.rejection_reason}
+                                      </p>
+                                    )}
                                   </>
                                 )}
                               </div>
