@@ -67,7 +67,7 @@ const Auth = () => {
         .from("user_roles")
         .select("role")
         .eq("user_id", data.user.id)
-        .single();
+        .maybeSingle();
 
       toast.success("Signed in successfully!");
       navigate(roleData?.role === "customer" ? "/customer-dashboard" : "/cardholder-dashboard");

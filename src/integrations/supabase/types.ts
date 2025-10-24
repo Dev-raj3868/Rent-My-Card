@@ -14,16 +14,167 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      credit_cards: {
+        Row: {
+          available: boolean | null
+          bank_name: string | null
+          card_holder_id: string
+          card_name: string
+          card_type: string
+          created_at: string | null
+          discount_percentage: number | null
+          id: string
+          terms: string | null
+        }
+        Insert: {
+          available?: boolean | null
+          bank_name?: string | null
+          card_holder_id: string
+          card_name: string
+          card_type: string
+          created_at?: string | null
+          discount_percentage?: number | null
+          id?: string
+          terms?: string | null
+        }
+        Update: {
+          available?: boolean | null
+          bank_name?: string | null
+          card_holder_id?: string
+          card_name?: string
+          card_type?: string
+          created_at?: string | null
+          discount_percentage?: number | null
+          id?: string
+          terms?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      purchase_requests: {
+        Row: {
+          approved_at: string | null
+          card_holder_id: string
+          card_id: string | null
+          created_at: string | null
+          customer_id: string
+          id: string
+          message: string | null
+          order_details: string | null
+          order_receipt_url: string | null
+          payment_proof_url: string | null
+          product_name: string
+          product_price: number
+          product_url: string | null
+          rejected_at: string | null
+          rejection_reason: string | null
+          status: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          card_holder_id: string
+          card_id?: string | null
+          created_at?: string | null
+          customer_id: string
+          id?: string
+          message?: string | null
+          order_details?: string | null
+          order_receipt_url?: string | null
+          payment_proof_url?: string | null
+          product_name: string
+          product_price: number
+          product_url?: string | null
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          status?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          card_holder_id?: string
+          card_id?: string | null
+          created_at?: string | null
+          customer_id?: string
+          id?: string
+          message?: string | null
+          order_details?: string | null
+          order_receipt_url?: string | null
+          payment_proof_url?: string | null
+          product_name?: string
+          product_price?: number
+          product_url?: string | null
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_requests_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["user_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "customer" | "card_holder"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +301,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["customer", "card_holder"],
+    },
   },
 } as const

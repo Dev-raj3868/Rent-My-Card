@@ -48,7 +48,7 @@ const CustomerDashboard = () => {
         .from("profiles")
         .select("full_name")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
       if (data?.full_name) {
         setCustomerName(data.full_name);
       }
