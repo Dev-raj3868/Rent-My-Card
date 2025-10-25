@@ -30,7 +30,7 @@ const Contact = () => {
           </div>
           
           <div className="grid md:grid-cols-2 gap-8">
-            <Card>
+            <Card className="hover:shadow-xl transition-all duration-300 animate-fade-in">
               <CardHeader>
                 <CardTitle>Send us a message</CardTitle>
                 <CardDescription>
@@ -55,13 +55,13 @@ const Contact = () => {
                     <Label htmlFor="message">Message</Label>
                     <Textarea id="message" name="message" rows={5} required />
                   </div>
-                  <Button type="submit" className="w-full">Send Message</Button>
+                  <Button type="submit" className="w-full hover-scale">Send Message</Button>
                 </form>
               </CardContent>
             </Card>
             
             <div className="space-y-6">
-              <Card>
+              <Card className="hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.1s" }}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Mail className="h-5 w-5 text-primary" />
@@ -73,7 +73,7 @@ const Contact = () => {
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.2s" }}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Phone className="h-5 w-5 text-primary" />
@@ -85,7 +85,7 @@ const Contact = () => {
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.3s" }}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />

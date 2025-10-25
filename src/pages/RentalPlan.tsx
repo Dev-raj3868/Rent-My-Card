@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { Check, TrendingUp, Percent, Shield } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Chatbot from "@/components/Chatbot";
 
 const RentalPlan = () => {
   const features = [
@@ -26,7 +27,7 @@ const RentalPlan = () => {
             </p>
           </div>
 
-          <Card className="border-primary">
+          <Card className="border-primary hover:shadow-2xl transition-all duration-300 hover-scale animate-fade-in">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl">Pay Per Use</CardTitle>
               <CardDescription className="text-lg">Only pay when you use a card</CardDescription>
@@ -42,8 +43,8 @@ const RentalPlan = () => {
               <div className="space-y-3">
                 <h3 className="font-semibold mb-4">What's included:</h3>
                 {features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="rounded-full bg-primary/10 p-1">
+                  <div key={index} className="flex items-center gap-3 hover-scale transition-all duration-200 animate-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div className="rounded-full bg-primary/10 p-1 hover:bg-primary/20 transition-colors">
                       <Check className="h-4 w-4 text-primary" />
                     </div>
                     <span>{feature}</span>
@@ -63,9 +64,43 @@ const RentalPlan = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Benefits Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mt-12">
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <CardHeader>
+                <TrendingUp className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>Save More</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Get guaranteed discounts on every purchase</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              <CardHeader>
+                <Percent className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>Best Rates</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Competitive pricing with transparent fees</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              <CardHeader>
+                <Shield className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>100% Secure</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">All transactions are encrypted and safe</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
 
+      <Chatbot />
       <Footer />
     </div>
   );

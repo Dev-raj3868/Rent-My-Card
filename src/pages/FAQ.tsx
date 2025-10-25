@@ -67,8 +67,8 @@ const FAQ = () => {
           
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg px-6">
-                <AccordionTrigger className="text-left hover:no-underline">
+              <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg px-6 hover:shadow-md transition-all duration-300 hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 0.05}s` }}>
+                <AccordionTrigger className="text-left hover:no-underline hover:text-primary transition-colors">
                   <span className="font-semibold">{faq.question}</span>
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">

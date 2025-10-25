@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CustomerSidebar } from "@/components/CustomerSidebar";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const CustomerHistory = () => {
   const navigate = useNavigate();
@@ -41,6 +43,24 @@ const CustomerHistory = () => {
 
   const formatTime = (dateString: string) => {
     return format(new Date(dateString), "hh:mm a");
+  };
+
+  const downloadImage = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      toast.success("Image downloaded successfully");
+    } catch (error) {
+      toast.error("Failed to download image");
+    }
   };
 
   return (
@@ -88,6 +108,7 @@ const CustomerHistory = () => {
                           <TableHead>Status</TableHead>
                           <TableHead>Date</TableHead>
                           <TableHead>Message</TableHead>
+                          <TableHead>Images</TableHead>
                           <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -142,22 +163,35 @@ const CustomerHistory = () => {
                               </div>
                             </TableCell>
                             <TableCell className="max-w-xs">
-                              <div className="space-y-1">
-                                {req.message && (
-                                  <p className="text-sm text-muted-foreground truncate italic" title={req.message}>
-                                    {req.message}
-                                  </p>
-                                )}
+                              {req.message && (
+                                <p className="text-sm text-muted-foreground truncate italic" title={req.message}>
+                                  {req.message}
+                                </p>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-2">
                                 {req.payment_proof_url && (
-                                  <a 
-                                    href={req.payment_proof_url} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-xs text-primary hover:underline flex items-center gap-1 hover-scale"
-                                    onClick={(e) => e.stopPropagation()}
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => downloadImage(req.payment_proof_url, `payment-${req.id}.png`)}
+                                    className="hover-scale text-xs"
                                   >
-                                    Payment Proof <ExternalLink className="h-3 w-3" />
-                                  </a>
+                                    <Download className="h-3 w-3 mr-1" />
+                                    Payment
+                                  </Button>
+                                )}
+                                {req.order_receipt_url && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => downloadImage(req.order_receipt_url, `receipt-${req.id}.png`)}
+                                    className="hover-scale text-xs"
+                                  >
+                                    <Download className="h-3 w-3 mr-1" />
+                                    Receipt
+                                  </Button>
                                 )}
                               </div>
                             </TableCell>

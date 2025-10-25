@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Target, Users, TrendingUp, Shield } from "lucide-react";
 
 const About = () => {
   return (
@@ -18,9 +19,12 @@ const About = () => {
           </div>
           
           <div className="space-y-8">
-            <Card>
+            <Card className="hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in">
               <CardHeader>
-                <CardTitle>Our Mission</CardTitle>
+                <div className="flex items-center gap-3">
+                  <Target className="h-6 w-6 text-primary" />
+                  <CardTitle>Our Mission</CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed">
@@ -32,9 +36,12 @@ const About = () => {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.1s" }}>
               <CardHeader>
-                <CardTitle>How It Started</CardTitle>
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="h-6 w-6 text-primary" />
+                  <CardTitle>How It Started</CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed">
@@ -46,9 +53,12 @@ const About = () => {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="hover:shadow-xl transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <CardHeader>
-                <CardTitle>Our Values</CardTitle>
+                <div className="flex items-center gap-3">
+                  <Shield className="h-6 w-6 text-primary" />
+                  <CardTitle>Our Values</CardTitle>
+                </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-muted-foreground">
@@ -71,6 +81,41 @@ const About = () => {
                 </ul>
               </CardContent>
             </Card>
+
+            {/* Team Stats */}
+            <div className="grid md:grid-cols-4 gap-6 mt-12">
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <CardContent className="pt-6">
+                  <Users className="h-10 w-10 text-primary mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-primary">10K+</p>
+                  <p className="text-sm text-muted-foreground">Active Users</p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.4s" }}>
+                <CardContent className="pt-6">
+                  <Shield className="h-10 w-10 text-primary mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-primary">100%</p>
+                  <p className="text-sm text-muted-foreground">Secure</p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.5s" }}>
+                <CardContent className="pt-6">
+                  <TrendingUp className="h-10 w-10 text-primary mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-primary">50K+</p>
+                  <p className="text-sm text-muted-foreground">Transactions</p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.6s" }}>
+                <CardContent className="pt-6">
+                  <Target className="h-10 w-10 text-primary mx-auto mb-2" />
+                  <p className="text-3xl font-bold text-primary">4.9/5</p>
+                  <p className="text-sm text-muted-foreground">Rating</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </main>
