@@ -85,19 +85,23 @@ const CardHolderMyCards = () => {
         <CardHolderSidebar />
         
         <div className="flex-1 flex flex-col">
-          <header className="border-b bg-card/50 backdrop-blur">
+          <header className="border-b bg-card/50 backdrop-blur transition-all duration-300">
             <div className="px-4 py-4 flex items-center gap-4">
-              <SidebarTrigger />
-              <h1 className="text-2xl font-bold">My Cards</h1>
+              <SidebarTrigger className="hover-scale" />
+              <h1 className="text-2xl font-bold hover-scale inline-block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                My Cards
+              </h1>
             </div>
           </header>
 
-          <main className="flex-1 p-8 overflow-auto bg-gradient-to-br from-primary/5 via-background to-accent/5">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold">My Credit Cards</h2>
+          <main className="flex-1 p-4 md:p-8 overflow-auto bg-gradient-to-br from-primary/5 via-background to-accent/5">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 animate-fade-in">
+              <h2 className="text-2xl md:text-3xl font-bold hover-scale inline-block">My Credit Cards</h2>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button><Plus className="mr-2 h-4 w-4" /> Add Card</Button>
+                  <Button className="hover-scale w-full md:w-auto">
+                    <Plus className="mr-2 h-4 w-4" /> Add Card
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <form onSubmit={handleAddCard}>
@@ -132,32 +136,39 @@ const CardHolderMyCards = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {myCards.map((card) => (
-                <Card key={card.id}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myCards.map((card, index) => (
+                <Card key={card.id} className="hover-lift animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="flex items-center gap-2">
+                        <CardTitle className="flex items-center gap-2 hover-scale inline-flex">
                           <CreditCard className="h-5 w-5 text-primary" />
                           {card.card_name}
                         </CardTitle>
-                        <CardDescription>{card.card_type}</CardDescription>
+                        <CardDescription className="mt-1">{card.card_type}</CardDescription>
                       </div>
                       <Button 
                         variant="ghost" 
                         size="icon"
                         onClick={() => handleDeleteCard(card.id)}
                         disabled={loading}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 hover-scale"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    {card.bank_name && <p className="text-sm mb-2"><span className="font-medium">Bank:</span> {card.bank_name}</p>}
-                    <Badge variant={card.available ? "default" : "secondary"}>
+                    {card.bank_name && (
+                      <p className="text-sm mb-2">
+                        <span className="font-medium">Bank:</span> {card.bank_name}
+                      </p>
+                    )}
+                    <Badge 
+                      variant={card.available ? "default" : "secondary"}
+                      className="hover-scale"
+                    >
                       {card.available ? "Available" : "Unavailable"}
                     </Badge>
                   </CardContent>
