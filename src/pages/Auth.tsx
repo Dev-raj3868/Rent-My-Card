@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
 
 type UserRole = "customer" | "card_holder";
 
@@ -17,8 +16,6 @@ const Auth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState<UserRole>("customer");
-  const [showSignInPassword, setShowSignInPassword] = useState(false);
-  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -96,13 +93,11 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 animate-fade-in">
-      <Card className="w-full max-w-md shadow-2xl hover-lift transition-all duration-300 border-2">
-        <CardHeader className="space-y-2">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Welcome Back
-          </CardTitle>
-          <CardDescription className="text-base">Sign in or create an account to get started</CardDescription>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl">Welcome</CardTitle>
+          <CardDescription>Sign in or create an account to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin">
@@ -111,54 +106,17 @@ const Auth = () => {
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="signin" className="space-y-4">
+            <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="signin-email">Email</Label>
-                  <Input 
-                    id="signin-email" 
-                    name="signin-email" 
-                    type="email" 
-                    required 
-                    className="transition-all duration-200 focus:scale-[1.02]"
-                  />
+                  <Input id="signin-email" name="signin-email" type="email" required />
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="signin-password">Password</Label>
-                    <Button
-                      type="button"
-                      variant="link"
-                      className="px-0 text-xs text-primary hover:text-primary/80"
-                      onClick={() => toast.info("Password reset coming soon!")}
-                    >
-                      Forgot Password?
-                    </Button>
-                  </div>
-                  <div className="relative">
-                    <Input 
-                      id="signin-password" 
-                      name="signin-password" 
-                      type={showSignInPassword ? "text" : "password"} 
-                      required 
-                      className="pr-10 transition-all duration-200 focus:scale-[1.02]"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                      onClick={() => setShowSignInPassword(!showSignInPassword)}
-                    >
-                      {showSignInPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
+                  <Label htmlFor="signin-password">Password</Label>
+                  <Input id="signin-password" name="signin-password" type="password" required />
                 </div>
-                <Button type="submit" className="w-full hover-scale" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
@@ -173,7 +131,7 @@ const Auth = () => {
               <Button 
                 type="button" 
                 variant="outline" 
-                className="w-full hover-scale" 
+                className="w-full" 
                 onClick={handleGoogleSignIn}
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -198,62 +156,23 @@ const Auth = () => {
               </Button>
             </TabsContent>
 
-            <TabsContent value="signup" className="space-y-4">
+            <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="full-name">Full Name</Label>
-                  <Input 
-                    id="full-name" 
-                    name="full-name" 
-                    required 
-                    className="transition-all duration-200 focus:scale-[1.02]"
-                  />
+                  <Input id="full-name" name="full-name" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Mobile Number</Label>
-                  <Input 
-                    id="phone" 
-                    name="phone" 
-                    type="tel" 
-                    required 
-                    placeholder="+91 XXXXX XXXXX" 
-                    className="transition-all duration-200 focus:scale-[1.02]"
-                  />
+                  <Input id="phone" name="phone" type="tel" required placeholder="+91 XXXXX XXXXX" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
-                  <Input 
-                    id="signup-email" 
-                    name="signup-email" 
-                    type="email" 
-                    required 
-                    className="transition-all duration-200 focus:scale-[1.02]"
-                  />
+                  <Input id="signup-email" name="signup-email" type="email" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
-                  <div className="relative">
-                    <Input 
-                      id="signup-password" 
-                      name="signup-password" 
-                      type={showSignUpPassword ? "text" : "password"} 
-                      required 
-                      className="pr-10 transition-all duration-200 focus:scale-[1.02]"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                      onClick={() => setShowSignUpPassword(!showSignUpPassword)}
-                    >
-                      {showSignUpPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
+                  <Input id="signup-password" name="signup-password" type="password" required />
                 </div>
                 <div className="space-y-2">
                   <Label>I am a:</Label>
@@ -268,7 +187,7 @@ const Auth = () => {
                     </div>
                   </RadioGroup>
                 </div>
-                <Button type="submit" className="w-full hover-scale" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>

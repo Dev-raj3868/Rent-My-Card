@@ -43,9 +43,7 @@ const CardHolderDashboard = () => {
           <header className="border-b bg-background">
             <div className="px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="mt-2">
-                  <SidebarTrigger />
-                </div>
+                <SidebarTrigger />
                 <div>
                   <h1 className="text-2xl font-bold">Card Holder Dashboard</h1>
                   <p className="text-sm text-muted-foreground">Manage your cards and requests</p>
@@ -105,26 +103,16 @@ const CardHolderDashboard = () => {
               <h3 className="text-xl font-bold mb-4">Recent Cards</h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {myCards.slice(0, 3).map((card) => (
-                  <Card key={card.id} className="hover-lift shadow-lg">
+                  <Card key={card.id}>
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="h-5 w-5" />
-                          {card.card_name}
-                        </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => navigate("/cardholder-my-cards")}
-                          className="hover-scale"
-                        >
-                          Edit
-                        </Button>
+                      <CardTitle className="flex items-center gap-2">
+                        <CreditCard className="h-5 w-5" />
+                        {card.card_name} - {card.card_type}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                      <p className="text-sm"><span className="font-medium">Type:</span> {card.card_type}</p>
-                      <p className="text-sm"><span className="font-medium">Discount:</span> {card.discount_percentage}%</p>
+                      <p className="text-sm"><span className="font-medium">Limit:</span> ₹{card.discount_percentage * 100}</p>
+                      <p className="text-sm"><span className="font-medium">Rental:</span> ₹{card.discount_percentage}/use</p>
                     </CardContent>
                   </Card>
                 ))}
