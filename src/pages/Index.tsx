@@ -1,17 +1,19 @@
+import { lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import HeroSlider from "@/components/home/HeroSlider";
 import AdvertisementBar from "@/components/home/AdvertisementBar";
-import HowItWorksSection from "@/components/HowItWorksSection";
-import BenefitsSection from "@/components/home/BenefitsSection";
-import StatsSection from "@/components/home/StatsSection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
-import CTASection from "@/components/CTASection";
-import PricingSection from "@/components/home/PricingSection";
-import TrustSection from "@/components/home/TrustSection";
-import FeaturedDeals from "@/components/home/FeaturedDeals";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const HowItWorksSection = lazy(() => import("@/components/HowItWorksSection"));
+const BenefitsSection = lazy(() => import("@/components/home/BenefitsSection"));
+const StatsSection = lazy(() => import("@/components/home/StatsSection"));
+const TestimonialsSection = lazy(() => import("@/components/home/TestimonialsSection"));
+const CTASection = lazy(() => import("@/components/CTASection"));
+const PricingSection = lazy(() => import("@/components/home/PricingSection"));
+const TrustSection = lazy(() => import("@/components/home/TrustSection"));
+const WhyChooseUs = lazy(() => import("@/components/home/WhyChooseUs"));
 
 const Index = () => {
   return (
@@ -19,15 +21,16 @@ const Index = () => {
       <Navbar />
       <HeroSlider />
       <AdvertisementBar />
-      <HowItWorksSection />
-      <BenefitsSection />
-      <FeaturedDeals />
-      <TrustSection />
-      <WhyChooseUs />
-      <TestimonialsSection />
-      <StatsSection />
-      <PricingSection />
-      <CTASection />
+      <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+        <HowItWorksSection />
+        <BenefitsSection />
+        <TrustSection />
+        <WhyChooseUs />
+        <TestimonialsSection />
+        <StatsSection />
+        <PricingSection />
+        <CTASection />
+      </Suspense>
       <Chatbot />
       <Footer />
     </div>

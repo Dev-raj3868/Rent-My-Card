@@ -12,6 +12,11 @@ import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import RentalPlan from "./pages/RentalPlan";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import ShippingPolicy from "./pages/ShippingPolicy";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import CustomerRequestStatus from "./pages/CustomerRequestStatus";
 import CustomerHistory from "./pages/CustomerHistory";
@@ -36,13 +41,18 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <Routes>
-          <Route path="/" element={<Index />} />
+        <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/features" element={<Features />} />
           <Route path="/rental-plan" element={<RentalPlan />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/return-policy" element={<ReturnPolicy />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
           <Route path="/customer-dashboard" element={<CustomerDashboard />} />
           <Route path="/featured-cards" element={<FeaturedCards />} />
           <Route path="/customer-request-status" element={<CustomerRequestStatus />} />

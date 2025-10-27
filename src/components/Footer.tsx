@@ -54,10 +54,11 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4 text-lg">Legal & Support</h3>
             <ul className="space-y-3 text-sm">
-              <li><Link to="/" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Privacy Policy</Link></li>
-              <li><Link to="/" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Terms of Service</Link></li>
-              <li><Link to="/" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Refund Policy</Link></li>
-              <li className="flex items-center gap-2 text-gray-400"><MapPin className="h-4 w-4" /> San Francisco, CA</li>
+              <li><Link to="/privacy-policy" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Privacy Policy</Link></li>
+              <li><Link to="/terms-and-conditions" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Terms & Conditions</Link></li>
+              <li><Link to="/refund-policy" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Refund Policy</Link></li>
+              <li><Link to="/return-policy" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Return Policy</Link></li>
+              <li><Link to="/shipping-policy" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Shipping Policy</Link></li>
             </ul>
           </div>
         </div>
