@@ -6,17 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CreditCard } from "lucide-react";
 
-type UserRole = "customer" | "card_holder";
-
-const Auth = () => {
+const CardholderAuth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState<UserRole>("customer");
   const [showSignInPassword, setShowSignInPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
@@ -43,9 +39,9 @@ const Auth = () => {
       if (error) throw error;
 
       if (data.user) {
-        await supabase.from("user_roles").insert({ user_id: data.user.id, role });
-        toast.success("Account created successfully!");
-        navigate(role === "customer" ? "/customer-dashboard" : "/cardholder-dashboard");
+        await supabase.from("user_roles").insert({ user_id: data.user.id, role: "card_holder" });
+        toast.success("Card holder account created successfully!");
+        navigate("/cardholder-dashboard");
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -72,8 +68,14 @@ const Auth = () => {
         .eq("user_id", data.user.id)
         .maybeSingle();
 
+      if (roleData?.role !== "card_holder") {
+        await supabase.auth.signOut();
+        toast.error("This account is not a card holder account");
+        return;
+      }
+
       toast.success("Signed in successfully!");
-      navigate(roleData?.role === "customer" ? "/customer-dashboard" : "/cardholder-dashboard");
+      navigate("/cardholder-dashboard");
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -86,7 +88,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth`
+          redirectTo: `${window.location.origin}/cardholder-auth`
         }
       });
       if (error) throw error;
@@ -96,19 +98,24 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4 animate-fade-in">
       <Card className="w-full max-w-md shadow-2xl hover-lift transition-all duration-300 border-2">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Welcome Back
+          <div className="flex items-center gap-2 justify-center">
+            <CreditCard className="h-8 w-8 text-primary" />
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-center">
+            Card Holder Portal
           </CardTitle>
-          <CardDescription className="text-base">Sign in or create an account to get started</CardDescription>
+          <CardDescription className="text-base text-center">
+            Join as a card holder and start earning from your credit cards
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="signup">Join Now</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signin" className="space-y-4">
@@ -255,21 +262,8 @@ const Auth = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>I am a:</Label>
-                  <RadioGroup value={role} onValueChange={(v) => setRole(v as UserRole)}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="customer" id="customer" />
-                      <Label htmlFor="customer" className="font-normal">Customer (Rent cards)</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="card_holder" id="card_holder" />
-                      <Label htmlFor="card_holder" className="font-normal">Card Holder (Offer cards)</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
                 <Button type="submit" className="w-full hover-scale" disabled={loading}>
-                  {loading ? "Creating account..." : "Create Account"}
+                  {loading ? "Creating account..." : "Join as Card Holder"}
                 </Button>
               </form>
             </TabsContent>
@@ -280,4 +274,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default CardholderAuth;

@@ -177,4 +177,15 @@ All colors MUST be HSL.
   .table-row-hover {
     @apply transition-all duration-200 hover:bg-muted/50 cursor-pointer;
   }
+  
+  /* Mobile responsive utilities */
+  @media (max-width: 768px) {
+    .container {
+      @apply px-4;
+    }
+    
+    .grid {
+      @apply gap-4;
+    }
+  }
 }
