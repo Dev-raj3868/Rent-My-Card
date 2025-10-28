@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 type UserRole = "customer" | "card_holder";
@@ -16,6 +17,36 @@ const Auth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState<UserRole>("customer");
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
+  const [googleRole, setGoogleRole] = useState<UserRole>("customer");
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Handle OAuth callback
+    const handleOAuthCallback = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+
+        if (!roleData) {
+          // New Google user - ask for role
+          setPendingUserId(session.user.id);
+          setShowRoleDialog(true);
+        } else {
+          // Existing user - redirect to dashboard
+          toast.success("Signed in successfully!");
+          navigate(roleData.role === "customer" ? "/customer-dashboard" : "/cardholder-dashboard");
+        }
+      }
+    };
+
+    handleOAuthCallback();
+  }, [navigate]);
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,6 +120,26 @@ const Auth = () => {
       if (error) throw error;
     } catch (error: any) {
       toast.error(error.message);
+    }
+  };
+
+  const handleRoleSubmit = async () => {
+    if (!pendingUserId) return;
+    
+    setLoading(true);
+    try {
+      await supabase.from("user_roles").insert({ 
+        user_id: pendingUserId, 
+        role: googleRole 
+      });
+      
+      toast.success("Account setup complete!");
+      setShowRoleDialog(false);
+      navigate(googleRole === "customer" ? "/customer-dashboard" : "/cardholder-dashboard");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -195,6 +246,32 @@ const Auth = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Complete Your Profile</DialogTitle>
+            <DialogDescription>
+              Please select your account type to continue
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <RadioGroup value={googleRole} onValueChange={(v) => setGoogleRole(v as UserRole)}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="customer" id="google-customer" />
+                <Label htmlFor="google-customer" className="font-normal">Customer (Rent cards)</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="card_holder" id="google-card_holder" />
+                <Label htmlFor="google-card_holder" className="font-normal">Card Holder (Offer cards)</Label>
+              </div>
+            </RadioGroup>
+            <Button onClick={handleRoleSubmit} className="w-full" disabled={loading}>
+              {loading ? "Setting up..." : "Continue"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
