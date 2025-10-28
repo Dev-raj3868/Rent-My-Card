@@ -45,9 +45,30 @@ const CustomerHistory = () => {
     return format(new Date(dateString), "hh:mm a");
   };
 
+  const getPublicUrl = (url: string) => {
+    if (!url) return null;
+    
+    // If it's already a full URL, return it
+    if (url.startsWith('http')) return url;
+    
+    // Extract the bucket and path from the URL
+    const bucketMatch = url.match(/([^/]+)\/(.+)/);
+    if (!bucketMatch) return null;
+    
+    const [, bucket, path] = bucketMatch;
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+    return data.publicUrl;
+  };
+
   const downloadImage = async (url: string, filename: string) => {
     try {
-      const response = await fetch(url);
+      const publicUrl = getPublicUrl(url);
+      if (!publicUrl) {
+        toast.error("Invalid image URL");
+        return;
+      }
+      
+      const response = await fetch(publicUrl);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -59,6 +80,7 @@ const CustomerHistory = () => {
       window.URL.revokeObjectURL(blobUrl);
       toast.success("Image downloaded successfully");
     } catch (error) {
+      console.error("Download error:", error);
       toast.error("Failed to download image");
     }
   };

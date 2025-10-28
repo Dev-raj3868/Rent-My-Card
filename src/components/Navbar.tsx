@@ -19,7 +19,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-6">
             <Link 
               to="/" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-primary relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left ${
                 isActive("/") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -27,7 +27,7 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/features" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-primary relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left ${
                 isActive("/features") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -35,7 +35,7 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/rental-plan" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-primary relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left ${
                 isActive("/rental-plan") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -43,7 +43,7 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/faq" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-primary relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left ${
                 isActive("/faq") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -51,7 +51,7 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/about" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-primary relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left ${
                 isActive("/about") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -59,7 +59,7 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/contact" 
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-medium transition-all duration-300 hover:text-primary relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left ${
                 isActive("/contact") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -68,7 +68,7 @@ const Navbar = () => {
           </div>
           
           <Link to="/auth">
-            <Button>Get Started</Button>
+            <Button className="transition-all duration-300 hover:scale-105 hover:shadow-lg">Get Started</Button>
           </Link>
         </div>
       </div>
