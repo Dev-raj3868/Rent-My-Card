@@ -7,6 +7,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useLoadingScreen } from "@/hooks/useLoadingScreen";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import ForgotPassword from "./pages/ForgotPassword";
 import Features from "./pages/Features";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
@@ -43,6 +44,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/features" element={<Features />} />
           <Route path="/rental-plan" element={<RentalPlan />} />
           <Route path="/faq" element={<FAQ />} />

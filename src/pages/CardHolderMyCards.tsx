@@ -11,12 +11,13 @@ import { Badge } from "@/components/ui/badge";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CardHolderSidebar } from "@/components/CardHolderSidebar";
 import { toast } from "sonner";
-import { CreditCard, Plus, Trash2 } from "lucide-react";
+import { CreditCard, Plus, Trash2, Edit } from "lucide-react";
 
 const CardHolderMyCards = () => {
   const navigate = useNavigate();
   const [myCards, setMyCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [editingCard, setEditingCard] = useState<any>(null);
 
   useEffect(() => {
     checkAuth();
@@ -51,6 +52,34 @@ const CardHolderMyCards = () => {
 
       if (error) throw error;
       toast.success("Card added successfully!");
+      fetchCards();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditCard = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const { error } = await supabase
+        .from("credit_cards")
+        .update({
+          card_name: formData.get("card_name") as string,
+          card_type: formData.get("card_type") as string,
+          bank_name: formData.get("bank_name") as string,
+          discount_percentage: parseInt(formData.get("discount_percentage") as string),
+          terms: formData.get("terms") as string
+        })
+        .eq("id", editingCard.id);
+
+      if (error) throw error;
+      toast.success("Card updated successfully!");
+      setEditingCard(null);
       fetchCards();
     } catch (error: any) {
       toast.error(error.message);
@@ -123,6 +152,10 @@ const CardHolderMyCards = () => {
                         <Input id="bank_name" name="bank_name" />
                       </div>
                       <div className="space-y-2">
+                        <Label htmlFor="discount_percentage">Discount Percentage *</Label>
+                        <Input id="discount_percentage" name="discount_percentage" type="number" defaultValue="50" required />
+                      </div>
+                      <div className="space-y-2">
                         <Label htmlFor="terms">Terms & Conditions</Label>
                         <Textarea id="terms" name="terms" />
                       </div>
@@ -148,23 +181,37 @@ const CardHolderMyCards = () => {
                         </CardTitle>
                         <CardDescription className="mt-1">{card.card_type}</CardDescription>
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => handleDeleteCard(card.id)}
-                        disabled={loading}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10 hover-scale"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => setEditingCard(card)}
+                          disabled={loading}
+                          className="text-primary hover:text-primary hover:bg-primary/10 hover-scale"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => handleDeleteCard(card.id)}
+                          disabled={loading}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10 hover-scale"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-2">
                     {card.bank_name && (
-                      <p className="text-sm mb-2">
+                      <p className="text-sm">
                         <span className="font-medium">Bank:</span> {card.bank_name}
                       </p>
                     )}
+                    <p className="text-sm">
+                      <span className="font-medium">Discount:</span> {card.discount_percentage}%
+                    </p>
                     <Badge 
                       variant={card.available ? "default" : "secondary"}
                       className="hover-scale"
@@ -175,6 +222,72 @@ const CardHolderMyCards = () => {
                 </Card>
               ))}
             </div>
+
+            {/* Edit Card Dialog */}
+            <Dialog open={!!editingCard} onOpenChange={(open) => !open && setEditingCard(null)}>
+              <DialogContent>
+                <form onSubmit={handleEditCard}>
+                  <DialogHeader>
+                    <DialogTitle>Edit Card</DialogTitle>
+                    <DialogDescription>Update your card details</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_card_name">Card Name *</Label>
+                      <Input 
+                        id="edit_card_name" 
+                        name="card_name" 
+                        defaultValue={editingCard?.card_name} 
+                        required 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_card_type">Card Type *</Label>
+                      <Input 
+                        id="edit_card_type" 
+                        name="card_type" 
+                        defaultValue={editingCard?.card_type} 
+                        required 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_bank_name">Bank Name</Label>
+                      <Input 
+                        id="edit_bank_name" 
+                        name="bank_name" 
+                        defaultValue={editingCard?.bank_name} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_discount_percentage">Discount Percentage *</Label>
+                      <Input 
+                        id="edit_discount_percentage" 
+                        name="discount_percentage" 
+                        type="number" 
+                        defaultValue={editingCard?.discount_percentage || 50} 
+                        required 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="edit_terms">Terms & Conditions</Label>
+                      <Textarea 
+                        id="edit_terms" 
+                        name="terms" 
+                        defaultValue={editingCard?.terms} 
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setEditingCard(null)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={loading}>
+                      {loading ? "Updating..." : "Update Card"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           </main>
         </div>
       </div>

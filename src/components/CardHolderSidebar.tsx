@@ -54,13 +54,13 @@ export function CardHolderSidebar() {
     <Sidebar className="border-r">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="flex flex-col items-start gap-1 text-lg font-bold px-4 py-4">
+          <SidebarGroupLabel className="flex flex-col items-start gap-1 text-lg font-bold px-4 py-6">
             <div className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
               Card Holder
             </div>
             {cardHolderName && (
-              <span className="text-xs font-normal text-muted-foreground">{cardHolderName}</span>
+              <span className="text-sm font-medium text-foreground mt-1">{cardHolderName}</span>
             )}
           </SidebarGroupLabel>
           <SidebarGroupContent>

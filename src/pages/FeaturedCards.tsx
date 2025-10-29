@@ -140,20 +140,41 @@ const FeaturedCards = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {cards.map((card) => (
-                <Card key={card.id}>
-                  <CardHeader>
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="h-5 w-5" />
-                      <CardTitle>{card.card_name}</CardTitle>
+                <Card key={card.id} className="overflow-hidden">
+                  <div className="bg-gradient-to-br from-primary via-primary/90 to-accent p-6 text-white min-h-[180px] flex flex-col justify-between relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12" />
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-12 h-8 bg-yellow-400 rounded flex items-center justify-center">
+                          <div className="w-8 h-6 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded" />
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-2xl font-bold tracking-wider">{card.card_name}</p>
+                        <p className="text-sm opacity-90">{card.card_type}</p>
+                      </div>
                     </div>
-                    <CardDescription>{card.card_type}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <p className="text-sm"><span className="font-medium">Bank:</span> {card.bank_name || "N/A"}</p>
-                      <p className="text-sm"><span className="font-medium">Discount:</span> {card.discount_percentage}%</p>
-                      {card.terms && <p className="text-xs text-muted-foreground mt-2">{card.terms}</p>}
+                    
+                    <div className="relative z-10 flex justify-between items-end">
+                      <div>
+                        <p className="text-xs opacity-75 uppercase">Bank</p>
+                        <p className="font-semibold">{card.bank_name || "N/A"}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs opacity-75 uppercase">Discount</p>
+                        <p className="text-2xl font-bold">{card.discount_percentage}%</p>
+                      </div>
                     </div>
+                  </div>
+                  
+                  <CardContent className="space-y-3 pt-4">
+                    {card.terms && (
+                      <div className="bg-muted/50 p-3 rounded-lg">
+                        <p className="text-xs text-muted-foreground">{card.terms}</p>
+                      </div>
+                    )}
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button className="w-full" onClick={() => setSelectedCard(card)}>

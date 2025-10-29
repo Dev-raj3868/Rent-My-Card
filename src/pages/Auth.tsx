@@ -7,9 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Eye, EyeOff } from "lucide-react";
 
 type UserRole = "customer" | "card_holder";
 
@@ -20,6 +20,8 @@ const Auth = () => {
   const [showRoleDialog, setShowRoleDialog] = useState(false);
   const [googleRole, setGoogleRole] = useState<UserRole>("customer");
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
   useEffect(() => {
     // Handle OAuth callback
@@ -71,7 +73,17 @@ const Auth = () => {
       if (error) throw error;
 
       if (data.user) {
+        // Insert user role
         await supabase.from("user_roles").insert({ user_id: data.user.id, role });
+        
+        // Create profile with signup data
+        await supabase.from("profiles").insert({
+          id: data.user.id,
+          full_name: fullName,
+          phone: phone,
+          email: email
+        });
+        
         toast.success("Account created successfully!");
         navigate(role === "customer" ? "/customer-dashboard" : "/cardholder-dashboard");
       }
@@ -165,13 +177,42 @@ const Auth = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signin-password">Password</Label>
-                  <Input id="signin-password" name="signin-password" type="password" required />
+                  <div className="relative">
+                    <Input 
+                      id="signin-password" 
+                      name="signin-password" 
+                      type={showSignInPassword ? "text" : "password"} 
+                      required 
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                      onClick={() => setShowSignInPassword(!showSignInPassword)}
+                    >
+                      {showSignInPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="px-0 text-sm" 
+                    onClick={() => navigate("/forgot-password")}
+                  >
+                    Forgot Password?
+                  </Button>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
-              
             </TabsContent>
 
             <TabsContent value="signup">
@@ -190,7 +231,27 @@ const Auth = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
-                  <Input id="signup-password" name="signup-password" type="password" required />
+                  <div className="relative">
+                    <Input 
+                      id="signup-password" 
+                      name="signup-password" 
+                      type={showSignUpPassword ? "text" : "password"} 
+                      required 
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                      onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                    >
+                      {showSignUpPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label>I am a:</Label>
