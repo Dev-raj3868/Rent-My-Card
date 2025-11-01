@@ -57,7 +57,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
-          phone: string | null
+          phone: string
         }
         Insert: {
           address?: string | null
@@ -65,7 +65,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
-          phone?: string | null
+          phone: string
         }
         Update: {
           address?: string | null
@@ -73,7 +73,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
-          phone?: string | null
+          phone?: string
         }
         Relationships: []
       }
@@ -150,6 +150,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          rating: number
+          user_id: string
+          user_name: string
+          user_role: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          id?: string
+          rating: number
+          user_id: string
+          user_name: string
+          user_role: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          user_id?: string
+          user_name?: string
+          user_role?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
