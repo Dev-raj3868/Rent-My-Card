@@ -111,8 +111,8 @@ const CardHolderDashboard = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
-                      <p className="text-sm"><span className="font-medium">Limit:</span> ₹{card.discount_percentage * 100}</p>
-                      <p className="text-sm"><span className="font-medium">Rental:</span> ₹{card.discount_percentage}/use</p>
+                      <p className="text-sm"><span className="font-medium">Type:</span> {card.card_type}</p>
+                      <p className="text-sm"><span className="font-medium">Discount:</span> {card.discount_percentage}%</p>
                     </CardContent>
                   </Card>
                 ))}
