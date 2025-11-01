@@ -9,7 +9,7 @@ import { CustomerSidebar } from "@/components/CustomerSidebar";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -60,12 +60,28 @@ const CustomerHistory = () => {
     return data.publicUrl;
   };
 
-  const viewImage = (url: string) => {
-    const publicUrl = getPublicUrl(url);
-    if (publicUrl) {
-      window.open(publicUrl, '_blank');
-    } else {
-      window.open(url, '_blank');
+  const downloadImage = async (url: string, filename: string) => {
+    try {
+      const publicUrl = getPublicUrl(url);
+      if (!publicUrl) {
+        toast.error("Invalid image URL");
+        return;
+      }
+      
+      const response = await fetch(publicUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      toast.success("Image downloaded successfully");
+    } catch (error) {
+      console.error("Download error:", error);
+      toast.error("Failed to download image");
     }
   };
 
@@ -181,10 +197,10 @@ const CustomerHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.payment_proof_url)}
+                                    onClick={() => downloadImage(req.payment_proof_url, `payment-${req.id}.png`)}
                                     className="hover-scale text-xs"
                                   >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
+                                    <Download className="h-3 w-3 mr-1" />
                                     Payment
                                   </Button>
                                 )}
@@ -192,10 +208,10 @@ const CustomerHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.order_receipt_url)}
+                                    onClick={() => downloadImage(req.order_receipt_url, `receipt-${req.id}.png`)}
                                     className="hover-scale text-xs"
                                   >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
+                                    <Download className="h-3 w-3 mr-1" />
                                     Receipt
                                   </Button>
                                 )}

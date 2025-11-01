@@ -156,40 +156,24 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      </div>
-      
-      <Card className="w-full max-w-md hover-lift shadow-2xl backdrop-blur-sm bg-card/95 border-primary/20">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Welcome
-          </CardTitle>
-          <CardDescription className="text-base">
-            Sign in or create an account to get started
-          </CardDescription>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl">Welcome</CardTitle>
+          <CardDescription>Sign in or create an account to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin">
-            <TabsList className="grid w-full grid-cols-2 bg-muted/50">
-              <TabsTrigger value="signin" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-accent data-[state=active]:text-white">Sign In</TabsTrigger>
-              <TabsTrigger value="signup" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-accent data-[state=active]:text-white">Sign Up</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="signin">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="signin-email">Email</Label>
-                  <Input 
-                    id="signin-email" 
-                    name="signin-email" 
-                    type="email" 
-                    required 
-                    className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors"
-                  />
+                  <Input id="signin-email" name="signin-email" type="email" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signin-password">Password</Label>
@@ -199,7 +183,6 @@ const Auth = () => {
                       name="signin-password" 
                       type={showSignInPassword ? "text" : "password"} 
                       required 
-                      className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors pr-10"
                     />
                     <Button
                       type="button"
@@ -226,7 +209,7 @@ const Auth = () => {
                     Forgot Password?
                   </Button>
                 </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
@@ -236,33 +219,15 @@ const Auth = () => {
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="full-name">Full Name</Label>
-                  <Input 
-                    id="full-name" 
-                    name="full-name" 
-                    required 
-                    className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors"
-                  />
+                  <Input id="full-name" name="full-name" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Mobile Number</Label>
-                  <Input 
-                    id="phone" 
-                    name="phone" 
-                    type="tel" 
-                    required 
-                    placeholder="+91 XXXXX XXXXX" 
-                    className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors"
-                  />
+                  <Input id="phone" name="phone" type="tel" required placeholder="+91 XXXXX XXXXX" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
-                  <Input 
-                    id="signup-email" 
-                    name="signup-email" 
-                    type="email" 
-                    required 
-                    className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors"
-                  />
+                  <Input id="signup-email" name="signup-email" type="email" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
@@ -272,7 +237,6 @@ const Auth = () => {
                       name="signup-password" 
                       type={showSignUpPassword ? "text" : "password"} 
                       required 
-                      className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors pr-10"
                     />
                     <Button
                       type="button"
@@ -302,7 +266,7 @@ const Auth = () => {
                     </div>
                   </RadioGroup>
                 </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>

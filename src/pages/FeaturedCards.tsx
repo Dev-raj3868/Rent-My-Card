@@ -140,48 +140,31 @@ const FeaturedCards = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {cards.map((card) => (
-                <Card key={card.id} className="overflow-hidden hover-lift">
-                  <div className="relative h-56 bg-gradient-to-br from-primary via-primary/80 to-accent overflow-hidden rounded-t-lg">
-                    {/* Card texture pattern */}
-                    <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.05)_25%,rgba(255,255,255,0.05)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.05)_75%)] bg-[length:20px_20px]"></div>
+                <Card key={card.id} className="overflow-hidden">
+                  <div className="bg-gradient-to-br from-primary via-primary/90 to-accent p-6 text-white min-h-[180px] flex flex-col justify-between relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12" />
                     
-                    {/* Holographic effect */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50 transition-opacity"></div>
-                    
-                    {/* Card content */}
-                    <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                      {/* Top section with bank logo */}
-                      <div className="flex justify-between items-start">
-                        <div className="w-16 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg">
-                          <CreditCard className="h-8 w-8 text-white" />
-                        </div>
-                        <div className="text-white/90 text-xs font-medium tracking-wider">
-                          {card.card_type?.toUpperCase()}
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-12 h-8 bg-yellow-400 rounded flex items-center justify-center">
+                          <div className="w-8 h-6 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded" />
                         </div>
                       </div>
-                      
-                      {/* Middle section - card name */}
+                      <div className="space-y-1">
+                        <p className="text-2xl font-bold tracking-wider">{card.card_name}</p>
+                        <p className="text-sm opacity-90">{card.card_type}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="relative z-10 flex justify-between items-end">
                       <div>
-                        <h3 className="text-2xl font-bold text-white mb-1 tracking-wide drop-shadow-lg">
-                          {card.card_name}
-                        </h3>
-                        {/* Chip below card name */}
-                        <div className="w-12 h-10 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md shadow-md mt-3">
-                          <div className="w-full h-full p-1.5">
-                            <div className="w-full h-full border border-yellow-600/30 rounded-sm"></div>
-                          </div>
-                        </div>
+                        <p className="text-xs opacity-75 uppercase">Bank</p>
+                        <p className="font-semibold">{card.bank_name || "N/A"}</p>
                       </div>
-                      
-                      {/* Bottom section */}
-                      <div className="flex justify-between items-end">
-                        <div>
-                          <p className="text-white/70 text-xs mb-1">ISSUER</p>
-                          <p className="text-white font-semibold">{card.bank_name}</p>
-                        </div>
-                        <div className="text-white/90 text-sm font-mono">
-                          •••• {Math.random().toString().slice(2, 6)}
-                        </div>
+                      <div className="text-right">
+                        <p className="text-xs opacity-75 uppercase">Discount</p>
+                        <p className="text-2xl font-bold">{card.discount_percentage}%</p>
                       </div>
                     </div>
                   </div>

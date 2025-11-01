@@ -59,6 +59,9 @@ export function CardHolderSidebar() {
               <CreditCard className="h-5 w-5" />
               Card Holder
             </div>
+            {cardHolderName && (
+              <span className="text-sm font-medium text-foreground mt-1">{cardHolderName}</span>
+            )}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

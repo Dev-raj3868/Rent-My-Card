@@ -9,7 +9,7 @@ import { CardHolderSidebar } from "@/components/CardHolderSidebar";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -45,8 +45,22 @@ const CardHolderHistory = () => {
     return format(new Date(dateString), "hh:mm a");
   };
 
-  const viewImage = (url: string) => {
-    window.open(url, '_blank');
+  const downloadImage = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      toast.success("Image downloaded successfully");
+    } catch (error) {
+      toast.error("Failed to download image");
+    }
   };
 
   return (
@@ -170,10 +184,10 @@ const CardHolderHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.payment_proof_url)}
+                                    onClick={() => downloadImage(req.payment_proof_url, `payment-${req.id}.png`)}
                                     className="hover-scale text-xs"
                                   >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
+                                    <Download className="h-3 w-3 mr-1" />
                                     Payment
                                   </Button>
                                 )}
@@ -181,10 +195,10 @@ const CardHolderHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.order_receipt_url)}
+                                    onClick={() => downloadImage(req.order_receipt_url, `receipt-${req.id}.png`)}
                                     className="hover-scale text-xs"
                                   >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
+                                    <Download className="h-3 w-3 mr-1" />
                                     Receipt
                                   </Button>
                                 )}
