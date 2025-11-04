@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CardHolderSidebar } from "@/components/CardHolderSidebar";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 const CardHolderHistory = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState<any[]>([]);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -45,8 +47,8 @@ const CardHolderHistory = () => {
     return format(new Date(dateString), "hh:mm a");
   };
 
-  const viewImage = (url: string) => {
-    window.open(url, '_blank');
+  const viewImage = (url: string, title: string) => {
+    setSelectedImage({ url, title });
   };
 
   return (
@@ -170,7 +172,7 @@ const CardHolderHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.payment_proof_url)}
+                                    onClick={() => viewImage(req.payment_proof_url, 'Payment Proof')}
                                     className="hover-scale text-xs"
                                   >
                                     <ExternalLink className="h-3 w-3 mr-1" />
@@ -181,7 +183,7 @@ const CardHolderHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.order_receipt_url)}
+                                    onClick={() => viewImage(req.order_receipt_url, 'Order Receipt')}
                                     className="hover-scale text-xs"
                                   >
                                     <ExternalLink className="h-3 w-3 mr-1" />
@@ -244,6 +246,21 @@ const CardHolderHistory = () => {
           </main>
         </div>
       </div>
+
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedImage?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center">
+            <img 
+              src={selectedImage?.url} 
+              alt={selectedImage?.title}
+              className="max-w-full h-auto rounded-lg"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };

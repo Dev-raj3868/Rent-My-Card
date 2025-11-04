@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CustomerSidebar } from "@/components/CustomerSidebar";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 const CustomerHistory = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState<any[]>([]);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -60,13 +62,12 @@ const CustomerHistory = () => {
     return data.publicUrl;
   };
 
-  const viewImage = (url: string) => {
+  const viewImage = (url: string, title: string) => {
     const publicUrl = getPublicUrl(url);
-    if (publicUrl) {
-      window.open(publicUrl, '_blank');
-    } else {
-      window.open(url, '_blank');
-    }
+    setSelectedImage({ 
+      url: publicUrl || url, 
+      title 
+    });
   };
 
   return (
@@ -181,7 +182,7 @@ const CustomerHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.payment_proof_url)}
+                                    onClick={() => viewImage(req.payment_proof_url, 'Payment Proof')}
                                     className="hover-scale text-xs"
                                   >
                                     <ExternalLink className="h-3 w-3 mr-1" />
@@ -192,7 +193,7 @@ const CustomerHistory = () => {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => viewImage(req.order_receipt_url)}
+                                    onClick={() => viewImage(req.order_receipt_url, 'Order Receipt')}
                                     className="hover-scale text-xs"
                                   >
                                     <ExternalLink className="h-3 w-3 mr-1" />
@@ -255,6 +256,21 @@ const CustomerHistory = () => {
           </main>
         </div>
       </div>
+
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedImage?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center">
+            <img 
+              src={selectedImage?.url} 
+              alt={selectedImage?.title}
+              className="max-w-full h-auto rounded-lg"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
