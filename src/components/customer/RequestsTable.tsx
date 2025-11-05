@@ -19,6 +19,8 @@ interface Request {
   order_details?: string;
   rejected_at?: string;
   rejection_reason?: string;
+  customer_name?: string;
+  customer_phone?: string;
 }
 
 interface RequestsTableProps {
@@ -43,6 +45,7 @@ export const RequestsTable = ({ requests, onViewImage }: RequestsTableProps) => 
             <TableHead className="w-12">#</TableHead>
             <TableHead>Product</TableHead>
             <TableHead>Card</TableHead>
+            <TableHead>Customer</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Date</TableHead>
@@ -79,6 +82,14 @@ export const RequestsTable = ({ requests, onViewImage }: RequestsTableProps) => 
                 <span className="text-sm text-muted-foreground">
                   {req.card_name_snapshot || 'N/A'}
                 </span>
+              </TableCell>
+              <TableCell>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-medium">{req.customer_name || 'N/A'}</span>
+                  {req.customer_phone && (
+                    <span className="text-xs text-muted-foreground">{req.customer_phone}</span>
+                  )}
+                </div>
               </TableCell>
               <TableCell>
                 <span className="font-medium">₹{req.product_price.toLocaleString('en-IN')}</span>
