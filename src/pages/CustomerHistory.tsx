@@ -35,8 +35,8 @@ const CustomerHistory = () => {
     setRequests(data || []);
   };
 
-  const viewImage = (url: string, title: string) => {
-    const publicUrl = getPublicUrl(url);
+  const viewImage = async (url: string, title: string) => {
+    const publicUrl = await getPublicUrl(url);
     setSelectedImage({ 
       url: publicUrl || url, 
       title 
