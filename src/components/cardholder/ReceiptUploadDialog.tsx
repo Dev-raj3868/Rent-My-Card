@@ -53,6 +53,7 @@ const ReceiptUploadDialog = ({ open, onOpenChange, requestId, onUploadComplete }
       const { error: updateError } = await supabase
         .from('purchase_requests')
         .update({
+          status: 'approved',
           order_receipt_url: publicUrl,
           order_details: orderDetails || null,
           approved_at: new Date().toISOString()
