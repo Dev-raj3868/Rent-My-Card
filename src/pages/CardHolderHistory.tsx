@@ -35,8 +35,8 @@ const CardHolderHistory = () => {
     setRequests(data || []);
   };
 
-  const viewImage = async (url: string, title: string) => {
-    const publicUrl = await getPublicUrl(url);
+  const viewImage = (url: string, title: string) => {
+    const publicUrl = getPublicUrl(url);
     setSelectedImage({ 
       url: publicUrl || url, 
       title 
