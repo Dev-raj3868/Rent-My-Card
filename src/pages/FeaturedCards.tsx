@@ -14,6 +14,8 @@ import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { toast } from "sonner";
 import { CreditCard, Send, Upload, CheckCircle } from "lucide-react";
 import paymentQR from "@/assets/payment-qr.png";
+import { purchaseRequestSchema } from "@/lib/validations";
+import { z } from "zod";
 
 const FeaturedCards = () => {
   const navigate = useNavigate();
@@ -42,13 +44,24 @@ const FeaturedCards = () => {
   const handlePaymentStep = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    setRequestFormData({
-      product_name: formData.get("product_name") as string,
-      product_price: parseFloat(formData.get("product_price") as string),
-      product_url: formData.get("product_url") as string,
-      message: formData.get("message") as string
-    });
-    setShowPayment(true);
+    
+    // Validate input
+    try {
+      const validatedData = purchaseRequestSchema.parse({
+        product_name: formData.get("product_name") as string,
+        product_price: parseFloat(formData.get("product_price") as string),
+        mobile_number: formData.get("mobile_number") as string,
+        product_url: formData.get("product_url") as string || undefined,
+        message: formData.get("message") as string || undefined
+      });
+      
+      setRequestFormData(validatedData);
+      setShowPayment(true);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      }
+    }
   };
 
   const handleConfirmPayment = async () => {
@@ -72,14 +85,13 @@ const FeaturedCards = () => {
       const fileExt = paymentFile.name.split('.').pop();
       const fileName = `${user?.id}/${Date.now()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
-        .from('order-receipts')
+        .from('payment-proofs')
         .upload(fileName, paymentFile);
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('order-receipts')
-        .getPublicUrl(fileName);
+      // Store the path instead of public URL since bucket is now private
+      const filePath = `payment-proofs/${fileName}`;
 
       // Create purchase request with payment proof and customer info
       const { error } = await supabase.from("purchase_requests").insert({
@@ -88,11 +100,11 @@ const FeaturedCards = () => {
         card_holder_id: selectedCard.card_holder_id,
         product_name: requestFormData.product_name,
         product_price: requestFormData.product_price,
-        product_url: requestFormData.product_url,
-        message: requestFormData.message,
-        payment_proof_url: publicUrl,
+        product_url: requestFormData.product_url || null,
+        message: requestFormData.message || null,
+        payment_proof_url: filePath,
         customer_name: profile?.full_name || null,
-        customer_phone: profile?.phone || null,
+        customer_phone: requestFormData.mobile_number || profile?.phone || null,
         card_name_snapshot: selectedCard.card_name
       });
 
@@ -214,6 +226,10 @@ const FeaturedCards = () => {
                               <div className="space-y-2">
                                 <Label htmlFor="product_price">Product Price (₹) *</Label>
                                 <Input id="product_price" name="product_price" type="number" step="0.01" required placeholder="Enter amount in INR" />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="mobile_number">Mobile Number *</Label>
+                                <Input id="mobile_number" name="mobile_number" type="tel" required placeholder="+91 XXXXX XXXXX" />
                               </div>
                               <div className="space-y-2">
                                 <Label htmlFor="product_url">Product URL</Label>
