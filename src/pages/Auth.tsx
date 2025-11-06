@@ -80,7 +80,7 @@ const Auth = () => {
         await supabase.from("profiles").insert({
           id: data.user.id,
           full_name: fullName,
-          phone: phone || null,
+          phone: phone,
           email: email
         });
         
@@ -244,11 +244,12 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Mobile Number (Optional)</Label>
+                  <Label htmlFor="phone">Mobile Number</Label>
                   <Input 
                     id="phone" 
                     name="phone" 
                     type="tel" 
+                    required
                     placeholder="+91 XXXXX XXXXX" 
                     className="bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary transition-colors"
                   />
