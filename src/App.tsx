@@ -29,6 +29,7 @@ import CardHolderHistory from "./pages/CardHolderHistory";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 const queryClient = new QueryClient();
 
@@ -41,34 +42,35 @@ const AppContent = () => {
 
   return (
     <BrowserRouter>
+      <WhatsAppButton />
       <Routes>
         <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/rental-plan" element={<RentalPlan />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/refund-policy" element={<RefundPolicy />} />
-          <Route path="/return-policy" element={<ReturnPolicy />} />
-          <Route path="/shipping-policy" element={<ShippingPolicy />} />
-          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
-          <Route path="/featured-cards" element={<FeaturedCards />} />
-          <Route path="/customer-request-status" element={<CustomerRequestStatus />} />
-          <Route path="/customer-history" element={<CustomerHistory />} />
-          <Route path="/customer-profile" element={<Profile />} />
-          <Route path="/customer-settings" element={<Settings />} />
-          <Route path="/cardholder-dashboard" element={<CardHolderDashboard />} />
-          <Route path="/cardholder-my-cards" element={<CardHolderMyCards />} />
-          <Route path="/cardholder-requests" element={<CardHolderRequests />} />
-          <Route path="/cardholder-history" element={<CardHolderHistory />} />
-          <Route path="/cardholder-profile" element={<Profile />} />
-          <Route path="/cardholder-settings" element={<Settings />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/rental-plan" element={<RentalPlan />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/return-policy" element={<ReturnPolicy />} />
+        <Route path="/shipping-policy" element={<ShippingPolicy />} />
+        <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+        <Route path="/featured-cards" element={<FeaturedCards />} />
+        <Route path="/customer-request-status" element={<CustomerRequestStatus />} />
+        <Route path="/customer-history" element={<CustomerHistory />} />
+        <Route path="/customer-profile" element={<Profile />} />
+        <Route path="/customer-settings" element={<Settings />} />
+        <Route path="/cardholder-dashboard" element={<CardHolderDashboard />} />
+        <Route path="/cardholder-my-cards" element={<CardHolderMyCards />} />
+        <Route path="/cardholder-requests" element={<CardHolderRequests />} />
+        <Route path="/cardholder-history" element={<CardHolderHistory />} />
+        <Route path="/cardholder-profile" element={<Profile />} />
+        <Route path="/cardholder-settings" element={<Settings />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
   );
 };

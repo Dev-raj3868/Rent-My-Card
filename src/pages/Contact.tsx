@@ -6,10 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 const Contact = () => {
+  const whatsappNumber = "916396038900";
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     toast.success("Message sent! We'll get back to you soon.");
@@ -81,7 +82,29 @@ const Contact = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                  <p className="text-muted-foreground">+91 6396038900</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: "0.25s" }}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageCircle className="h-5 w-5 text-[#25D366]" />
+                    WhatsApp
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-3">Chat with us on WhatsApp</p>
+                  <a
+                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi! I have a question about RentMyCard.")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button className="w-full bg-[#25D366] hover:bg-[#20BA5A]">
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Start Chat
+                    </Button>
+                  </a>
                 </CardContent>
               </Card>
               

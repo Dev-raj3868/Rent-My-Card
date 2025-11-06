@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CreditCard, Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { CreditCard, Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
@@ -47,7 +47,17 @@ const Footer = () => {
               <li><Link to="/about" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">About Us</Link></li>
               <li><Link to="/contact" className="text-gray-400 hover:text-primary transition-colors hover-scale inline-block">Contact</Link></li>
               <li className="flex items-center gap-2 text-gray-400"><Mail className="h-4 w-4" /> support@cardrental.com</li>
-              <li className="flex items-center gap-2 text-gray-400"><Phone className="h-4 w-4" /> +1 (555) 123-4567</li>
+              <li className="flex items-center gap-2 text-gray-400"><Phone className="h-4 w-4" /> +91 6396038900</li>
+              <li>
+                <a
+                  href="https://wa.me/916396038900?text=Hi!%20I%20have%20a%20question%20about%20RentMyCard."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-gray-400 hover:text-[#25D366] transition-colors hover-scale"
+                >
+                  <MessageCircle className="h-4 w-4" /> WhatsApp Chat
+                </a>
+              </li>
             </ul>
           </div>
           
