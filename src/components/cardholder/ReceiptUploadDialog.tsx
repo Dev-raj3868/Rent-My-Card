@@ -46,15 +46,14 @@ const ReceiptUploadDialog = ({ open, onOpenChange, requestId, onUploadComplete }
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('order-receipts')
-        .getPublicUrl(fileName);
+      // Store the path instead of public URL since bucket is now private
+      const filePath = `order-receipts/${fileName}`;
 
       const { error: updateError } = await supabase
         .from('purchase_requests')
         .update({
           status: 'approved',
-          order_receipt_url: publicUrl,
+          order_receipt_url: filePath,
           order_details: orderDetails || null,
           approved_at: new Date().toISOString()
         })

@@ -14,6 +14,8 @@ import { CreditCard, Send, CheckCircle, Upload } from "lucide-react";
 import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import paymentQR from "@/assets/payment-qr.png";
+import { purchaseRequestSchema } from "@/lib/validations";
+import { z } from "zod";
 
 const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -58,14 +60,24 @@ const CustomerDashboard = () => {
   const handlePaymentStep = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    setRequestFormData({
-      product_name: formData.get("product_name") as string,
-      product_price: parseFloat(formData.get("product_price") as string),
-      mobile_number: formData.get("mobile_number") as string,
-      product_url: formData.get("product_url") as string,
-      message: formData.get("message") as string
-    });
-    setShowPayment(true);
+    
+    // Validate input
+    try {
+      const validatedData = purchaseRequestSchema.parse({
+        product_name: formData.get("product_name") as string,
+        product_price: parseFloat(formData.get("product_price") as string),
+        mobile_number: formData.get("mobile_number") as string,
+        product_url: formData.get("product_url") as string || undefined,
+        message: formData.get("message") as string || undefined
+      });
+      
+      setRequestFormData(validatedData);
+      setShowPayment(true);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      }
+    }
   };
 
   const handleConfirmPayment = async () => {
@@ -89,14 +101,13 @@ const CustomerDashboard = () => {
       const fileExt = paymentFile.name.split('.').pop();
       const fileName = `${user?.id}/${Date.now()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
-        .from('order-receipts')
+        .from('payment-proofs')
         .upload(fileName, paymentFile);
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('order-receipts')
-        .getPublicUrl(fileName);
+      // Store the path instead of public URL since bucket is now private
+      const filePath = `payment-proofs/${fileName}`;
 
       // Create purchase request with payment proof and customer info
       const { error } = await supabase.from("purchase_requests").insert({
@@ -105,9 +116,9 @@ const CustomerDashboard = () => {
         card_holder_id: selectedCard.card_holder_id,
         product_name: requestFormData.product_name,
         product_price: requestFormData.product_price,
-        product_url: requestFormData.product_url,
-        message: requestFormData.message,
-        payment_proof_url: publicUrl,
+        product_url: requestFormData.product_url || null,
+        message: requestFormData.message || null,
+        payment_proof_url: filePath,
         customer_name: profile?.full_name || customerName || null,
         customer_phone: requestFormData.mobile_number || profile?.phone || null,
         card_name_snapshot: selectedCard.card_name

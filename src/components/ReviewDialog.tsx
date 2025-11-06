@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Star, MessageSquarePlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { reviewSchema } from "@/lib/validations";
+import { z } from "zod";
 
 export function ReviewDialog() {
   const [open, setOpen] = useState(false);
@@ -17,19 +19,15 @@ export function ReviewDialog() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (rating === 0) {
-      toast.error("Please select a rating");
-      return;
-    }
-
-    if (!comment.trim()) {
-      toast.error("Please write a comment");
-      return;
-    }
-
     setLoading(true);
 
     try {
+      // Validate input
+      const validatedData = reviewSchema.parse({
+        rating,
+        comment: comment.trim()
+      });
+
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -53,8 +51,8 @@ export function ReviewDialog() {
 
       const { error } = await supabase.from("reviews").insert({
         user_id: user.id,
-        rating,
-        comment: comment.trim(),
+        rating: validatedData.rating,
+        comment: validatedData.comment,
         user_name: profile?.full_name || "Anonymous",
         user_role: roleData?.role === "card_holder" ? "Card Holder" : "Customer"
       });
@@ -69,8 +67,12 @@ export function ReviewDialog() {
       // Reload page to show new review
       setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
-      console.error("Error submitting review:", error);
-      toast.error("Failed to submit review");
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        console.error("Error submitting review:", error);
+        toast.error("Failed to submit review");
+      }
     } finally {
       setLoading(false);
     }

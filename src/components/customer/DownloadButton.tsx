@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { getPublicUrl } from "@/utils/storageHelpers";
+import { getSignedUrl } from "@/utils/storageHelpers";
+import { toast } from "sonner";
 
 interface DownloadButtonProps {
   url: string;
@@ -11,10 +12,13 @@ interface DownloadButtonProps {
 export const DownloadButton = ({ url, filename, label }: DownloadButtonProps) => {
   const handleDownload = async () => {
     try {
-      const publicUrl = getPublicUrl(url);
-      if (!publicUrl) return;
+      const signedUrl = await getSignedUrl(url);
+      if (!signedUrl) {
+        toast.error('Failed to access file');
+        return;
+      }
       
-      const response = await fetch(publicUrl);
+      const response = await fetch(signedUrl);
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -26,6 +30,7 @@ export const DownloadButton = ({ url, filename, label }: DownloadButtonProps) =>
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Download failed:', error);
+      toast.error('Failed to download file');
     }
   };
 

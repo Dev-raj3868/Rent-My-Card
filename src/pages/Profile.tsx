@@ -10,6 +10,8 @@ import { User } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CustomerSidebar } from "@/components/CustomerSidebar";
 import { CardHolderSidebar } from "@/components/CardHolderSidebar";
+import { profileSchema } from "@/lib/validations";
+import { z } from "zod";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -49,12 +51,19 @@ const Profile = () => {
     const { data: { user } } = await supabase.auth.getUser();
 
     try {
+      // Validate input
+      const validatedData = profileSchema.parse({
+        full_name: formData.get("full_name") as string,
+        phone: formData.get("phone") as string || undefined,
+        address: formData.get("address") as string || undefined,
+      });
+
       const { error } = await supabase
         .from("profiles")
         .update({
-          full_name: formData.get("full_name") as string,
-          phone: formData.get("phone") as string,
-          address: formData.get("address") as string,
+          full_name: validatedData.full_name,
+          phone: validatedData.phone || null,
+          address: validatedData.address || null,
         })
         .eq("id", user?.id as string);
 
@@ -62,7 +71,11 @@ const Profile = () => {
       toast.success("Profile updated successfully!");
       fetchProfile();
     } catch (error: any) {
-      toast.error(error.message);
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error(error.message);
+      }
     } finally {
       setLoading(false);
     }

@@ -8,7 +8,7 @@ import { NotificationDropdown } from "@/components/NotificationDropdown";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { RequestsTable } from "@/components/customer/RequestsTable";
 import { ImageViewDialog } from "@/components/customer/ImageViewDialog";
-import { getPublicUrl } from "@/utils/storageHelpers";
+import { getSignedUrl } from "@/utils/storageHelpers";
 
 const CardHolderHistory = () => {
   const navigate = useNavigate();
@@ -35,10 +35,10 @@ const CardHolderHistory = () => {
     setRequests(data || []);
   };
 
-  const viewImage = (url: string, title: string) => {
-    const publicUrl = getPublicUrl(url);
+  const viewImage = async (url: string, title: string) => {
+    const signedUrl = await getSignedUrl(url);
     setSelectedImage({ 
-      url: publicUrl || url, 
+      url: signedUrl || url, 
       title 
     });
   };

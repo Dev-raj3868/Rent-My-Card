@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export const getPublicUrl = (url: string): string | null => {
+// Get signed URL for private storage buckets (expires in 1 hour)
+export const getSignedUrl = async (url: string): Promise<string | null> => {
   if (!url) return null;
   
   // If it's already a full URL, return it
@@ -12,7 +13,15 @@ export const getPublicUrl = (url: string): string | null => {
   
   const [, bucket, path] = bucketMatch;
   
-  // Get public URL
-  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-  return data.publicUrl;
+  // Get signed URL (valid for 1 hour)
+  const { data, error } = await supabase.storage
+    .from(bucket)
+    .createSignedUrl(path, 3600);
+  
+  if (error) {
+    console.error('Error creating signed URL:', error);
+    return null;
+  }
+  
+  return data.signedUrl;
 };
