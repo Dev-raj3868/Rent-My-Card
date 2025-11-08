@@ -11,10 +11,37 @@ import { toast } from "sonner";
 
 const Contact = () => {
   const whatsappNumber = "916396038900";
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("Message sent! We'll get back to you soon.");
-    e.currentTarget.reset();
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message')
+          })
+        }
+      );
+
+      if (response.ok) {
+        toast.success("Message sent! We'll get back to you soon.");
+        e.currentTarget.reset();
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      toast.error("Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -117,9 +144,9 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    123 Business Street<br />
-                    Suite 456<br />
-                    San Francisco, CA 94103
+                    Gautam Bhudh Nagar<br />
+                    Greater Noida<br />
+                    Uttar Pradesh 201310
                   </p>
                 </CardContent>
               </Card>
