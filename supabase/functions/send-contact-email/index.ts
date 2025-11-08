@@ -33,7 +33,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "RentMyCard <onboarding@resend.dev>",
-        to: ["coder3868@gmail.com"],
+        to: ["01kingdev2005@gmail.com"], // Changed to your verified email for testing
         reply_to: email,
         subject: `Contact Form: ${subject}`,
         html: `
