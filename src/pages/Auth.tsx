@@ -10,6 +10,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import authBg from "@/assets/auth-bg.jpg";
 
 type UserRole = "customer" | "card_holder";
 
@@ -156,14 +158,21 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4 relative overflow-hidden">
-      {/* Animated background elements */}
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Background image with overlay */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <img 
+          src={authBg} 
+          alt="Authentication background" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-background/85 backdrop-blur-sm"></div>
       </div>
       
-      <Card className="w-full max-w-md hover-lift shadow-2xl backdrop-blur-sm bg-card/95 border-primary/20">
+      <Navbar />
+      
+      <div className="flex-1 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md hover-lift shadow-2xl backdrop-blur-md bg-card/90 border-primary/30">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Welcome
@@ -310,6 +319,7 @@ const Auth = () => {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
 
       <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
         <DialogContent>
